@@ -1,4 +1,5 @@
 import json
+import sys
 import parse
 
 def english(word):
@@ -11,29 +12,44 @@ def english(word):
 			return entry['translations'][0]['english']
 
 def translate(phrase):
-	if phrase['partOfSpeech'] == 'noun':
+	print(parse.output(phrase))
+	if phrase['part'] == 'noun':
 		head = ''
 		tail = []
-		for describer in phrase['describers']:
-			if describer['head'] == 'xo':
-				head = 'no '
-			elif parse.partOf(describer['head']) == 'adverb':
-				tail.append('existing'+translate(describer))
-			elif describer['partOfSpeech'] in ['adjective','adverb']:
-				tail.append(translate(describer))
-
-	if phrase['partOfSpeech'] == 'adj':
+		if phrase['describers'] != []:
+			for describer in phrase['describers']:
+				if describer['head'] == 'xo':
+					head = 'no '
+				elif parse.partOf(describer['head']) == 'adverb':
+					tail.append('existing'+translate(describer))
+				elif describer['part'] in ['adj','adv']:
+					tail.append(translate(describer))
+			return head + english(phrase['head'])+' that is '+" and ".join(tail)
+		else:
+			return head
+	if phrase['part'] == 'adj':
 		head = ''
 		tail = ''
-		for describer in phrase['describer']:
+		for describer in phrase['describers']:
 			if parse.partOf(describer['head']) == 'prep':
 				tail = tail + translate(describer)
 			else:
 				head = head + translate(describer)
 		return head +' '+ english(phrase['head'])+tail
-	if phrase['partOfSpeech'] == 'adv':
+	if phrase['part'] == 'adv':
 		return english(phrase['head'])
-	if phrase['partOfSpeech'] == 'prep':
-		return english(phrase['head'])+' something'
+	if phrase['part'] == 'prep':
+		head = ''
+		tail = 'something'
+		for describer in phrase['describers']:
+			if describer['part'] == 'noun':
+				tail = translate(describer)
+			elif describer['part'] == 'adv':
+				head.append(translate(describer))
+		return ", and ".join(head)+' '+english(phrase['head'])+' '+tail
+	if phrase['part'] == 'adverboid':
+		return english(phrase['head'])
 
-translate([{'head': '0a0', 'describers': [{'head': 'ot', 'describers': [{'head': 'xox', 'describers': [{'head': 'ri9', 'describers': [{'head': '3o3', 'describers': [], 'part': 'adverboid'}, {'head': 'ot', 'describers': [{'head': 'joj', 'describers': [], 'part': 'noun'}], 'part': 'prep'}], 'part': 'adj'}], 'part': 'noun'}], 'part': 'prep'}, {'head': 'o', 'describers': [{'head': '3o3', 'describers': [], 'part': 'adverboid'}, {'head': 'ot', 'describers': [{'head': '0a0', 'describers': [{'head': 'ot', 'describers': [{'head': 'xox', 'describers': [{'head': 'iq', 'describers': [{'head': '3o3', 'describers': [], 'part': 'adverboid'}, {'head': 'ot', 'describers': [{'head': 'xox', 'describers': [{'head': 'ke0', 'describers': [{'head': '3o3', 'describers': [], 'part': 'adverboid'}], 'part': 'adj'}], 'part': 'noun'}], 'part': 'prep'}], 'part': 'adj'}, {'head': '0ub', 'describers': [{'head': '3o3', 'describers': [], 'part': 'adverboid'}], 'part': 'adj'}], 'part': 'noun'}], 'part': 'prep'}], 'part': 'noun'}], 'part': 'prep'}], 'part': 'adj'}], 'part': 'noun'}, {'head': '', 'describers': [], 'part': 'e:noun'}, {'head': 'ol', 'describers': [], 'part': 'endall'}])
+sentence = parse.unparsed(' '.join(sys.argv[1:])+' ol')
+parse.parse(sentence)
+print('There is a '+translate(sentence[0]))

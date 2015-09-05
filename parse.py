@@ -1,6 +1,7 @@
 #!/usr/bin/env python 
 import json
 import sys
+import drawtree
 '''
 sentence(
 	word(
@@ -136,7 +137,8 @@ def parsed(i):
 
 sentence = unparsed(' '.join(sys.argv[1:])+' ol')
 parse(sentence)
+print(sentence)
 for i in range(0,len(sentence)-1):
-	done = parsed(i)
+	done = drawtree.draw({'head':drawtree.asciiimage(sentence[i]['head']),'describers':sentence[i]['describers']})
 	if done != '[]':
 		print(done)
