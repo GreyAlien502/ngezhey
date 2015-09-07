@@ -99,8 +99,16 @@ def parse(sentence):
 		else:
 			index = index -1
 			if index == 0:
-				return False
-	return(True)
+				break
+	def checkZhozh(inphrase):
+		for tail in inphrase.desc:
+			checkZhozh(tail)
+			if tail.part == 'ab' and\
+			   tail.head.text == '3o3':
+				inphrase.zhozh = True
+				inphrase.desc.remove(tail)
+	for i in range(0,len(sentence)):
+		checkZhozh(sentence[i])
 
 def output(inphrase):
 	if inphrase.desc == []:
@@ -109,5 +117,11 @@ def output(inphrase):
 		return '['+str(inphrase.head)+' ' +' '.join([output(describer) for describer in inphrase.desc])+']'
 
 def unparsed(words):
-	output=[phrase.phrase(word.rootword(actuword)) for actuword in words] 
-	return output
+	out = []
+	for actuaword in words:
+		if any(letter in actuaword for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+			werd = word.loanword(actuaword)
+		else:
+			werd = word.rootword(actuaword)
+		out.append(phrase.phrase(werd))
+	return out
