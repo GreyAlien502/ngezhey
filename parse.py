@@ -1,7 +1,9 @@
-#!/usr/bin/env python 
 import json
 import sys
-import drawtree
+
+import word
+import phrase
+
 '''
 sentence(
 	word(
@@ -17,7 +19,7 @@ sentence(
 '''
 
 parts = [
- 'noun','adj','adv','prep', 'adverboid']
+ 'n','aj','av','pr', 'ab']
 desc = [
 [False,False,False,True, False],
 [True, False,False,False,False],
@@ -25,87 +27,67 @@ desc = [
 [True, True, True, True, False],
 [True, True, True, True, False]
 ]
-def partList(lecian):
-	output = []
-	for i in range(0,len(lecian)):
-		if lecian[i]:
-			output.append(parts[i])
-	return output
-
-def partOf(word):
-	wordFile = open('ngenglecian','r')
-	wordlecian = json.load(wordFile)
-	wordFile.close()
-	for wordlecian_item in wordlecian:
-		if wordlecian_item['original'] == word:
-			return convertPart(wordlecian_item['partOfSpeech'])
-	print(word)
-
-def convertPart(part):
-	parts = 'n aj av pr ab dn ed'.split(' ')
-	nuvoparts = 'noun adj adv prep adverboid ender endall'.split(' ')
-	return nuvoparts[parts.index(part)]
+dummy = word.word('')
+dummy.part = ':dnn'
 
 def describes(head,tail):
-	if (head == 'conj') or\
-	   (tail == 'conj') or\
-	   (head == 'ender')or\
-	   (tail == 'ender'):
+	if (head == 'cj') or\
+	   (tail == 'cj') or\
+	   (head == 'dn')or\
+	   (tail == 'dn'):
 		return False
-	if head[1] == ':':
-		if head[0] == 'e':
+	if head[0] == ':':
+		if head[1:3] == 'dn':
 			return False
-	if tail[1] == ':':
-		if tail[0] == 'e':
-			return describes(head,tail[2:])
+	if tail[0] == ':':
+		if tail[1:3] == 'dn':
+			return describes(head,tail[3:])
 
 	head = parts.index(head)
 	tail = parts.index(tail)
 	return desc[tail][head]
 
 def attempt(sentence,i):
-	word = sentence[i]['part']
+	part = sentence[i].part
 	if (i < len(sentence)-1) & (i >= 0):
-		post = sentence[i+1]['part']
-		if (post == 'conj'):
-			sentence[i-1]['part'] = 'c:'+word['part']
+		post = sentence[i+1].part
+		if (post == 'cj'):
+			sentence[i-1].part = ':cj'+part
 			return True
-		if (word == 'ender'):
-			if post[:2] == 'e:':
-				kind = post[2:]
+		if (part == 'dn'):
+			if post[:3] == ':dn':
+				kind = post[3:]
 			else:
 				kind = post
-			sentence[i]['part'] = 'e:'+kind
+			sentence[i].part = ':dn' + kind
 			return True
-		if (word[0] != 'e') & (post == 'endall'):
-			sentence.insert(i+1,{'head':'','part':'e:noun','describers':[]})
+		if (part not in ['dn',':dnn']) & (post == 'ed'):
+			sentence.insert(i+1,phrase.phrase(dummy))
 			return True
-	if word[0] == 'e':
+	if part[:3] == ':dn':
 		return False
 
-
 	if (i < len(sentence)-1) & (i >= 1): 
-		pre = sentence[i-1]['part']
-		post = sentence[i+1]['part']
-		if (pre == 'prep') &\
-		   (post == 'noun'):
-			if (post[:2] == 'e:') and\
-			   (describes(word,post[2:])):
-				sentence[i-1]['describers'].append(sentence.pop(i))
+		pre = sentence[i-1].part
+		post = sentence[i+1].part
+		if (pre == 'pr') & (part == 'n'):
+			if (post[:3] == ':dn') and\
+			   (describes(part,post[3:])):
+				sentence[i-1].desc.append(sentence.pop(i))
 				sentence.pop(i)
 				return True
-			if not describes('noun',post):
-				sentence[i-1]['describers'].append(sentence.pop(i))
-				sentence[i-1]['part'] = 'adv'
+			if not describes('n',post):
+				sentence[i-1].desc.append(sentence.pop(i))
+				sentence[i-1].part = 'av'
 				return True
-		if (describes(pre,word)):
-			if (post[:2] == 'e:') and\
-			   (describes(word,post[2:])):
-				sentence[i-1]['describers'].append(sentence.pop(i))
+		if (describes(pre,part)):
+			if (post[:3] == ':dn') and\
+			   (describes(part,post[3:])):
+				sentence[i-1].desc.append(sentence.pop(i))
 				sentence.pop(i)
 				return True
-			if (not describes(word,post)):
-				sentence[i-1]['describers'].append(sentence.pop(i))
+			if (not describes(part,post)):
+				sentence[i-1].desc.append(sentence.pop(i))
 				return True
 	return False
 
@@ -120,25 +102,12 @@ def parse(sentence):
 				return False
 	return(True)
 
-def output(tree):
-	if tree['describers'] == []:
-		return '['+tree['head']+']'
+def output(inphrase):
+	if inphrase.desc == []:
+		return '['+str(inphrase.head)+']'
 	else:
-		return '['+tree['head']+' ' +' '.join([output(describer) for describer in tree['describers']])+']'
+		return '['+str(inphrase.head)+' ' +' '.join([output(describer) for describer in inphrase.desc])+']'
 
-def unparsed(string):
-	words =  string.split(' ')
-	o=[{'p':partOf(word),'w':word} for word in words] 
-	return [{'head':u['w'],'part':u['p'],'describers':[]} for u in o]
-
-def parsed(i):
-	return output(sentence[i])
-
-
-sentence = unparsed(' '.join(sys.argv[1:])+' ol')
-parse(sentence)
-print(sentence)
-for i in range(0,len(sentence)-1):
-	done = drawtree.draw({'head':drawtree.asciiimage(sentence[i]['head']),'describers':sentence[i]['describers']})
-	if done != '[]':
-		print(done)
+def unparsed(words):
+	output=[phrase.phrase(word.rootword(actuword)) for actuword in words] 
+	return output

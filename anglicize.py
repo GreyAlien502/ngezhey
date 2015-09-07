@@ -1,15 +1,10 @@
 import json
 import sys
-import parse
 
-def english(word):
-	dictfile = open('ngenglecian','r')
-	dictionary = json.load(dictfile)
-	dictfile.close()
-	
-	for entry in dictionary:
-		if entry['original'] == word:
-			return entry['translations'][0]['english']
+import parse
+from dictionary import translate as english
+
+
 
 def translate(phrase):
 	print(parse.output(phrase))
