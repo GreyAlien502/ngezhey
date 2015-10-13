@@ -101,14 +101,15 @@ def parse(sentence):
 			if index == 0:
 				break
 	def checkZhozh(inphrase):
+		out = []
 		for tail in inphrase.desc:
-			checkZhozh(tail)
-			if tail.part == 'ab' and\
-			   tail.head.text == '3o3':
+			out+=checkZhozh(tail)
+			if tail.head.text == '3o3':
 				inphrase.zhozh = True
-				inphrase.desc.remove(tail)
+				out.append([inphrase.desc,tail])
+		return out
 	for i in range(0,len(sentence)):
-		checkZhozh(sentence[i])
+		[entry[0].remove(entry[1]) for entry in checkZhozh(sentence[i])]
 
 def output(inphrase):
 	if inphrase.desc == []:
