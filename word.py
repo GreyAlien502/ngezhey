@@ -23,9 +23,9 @@ class loanword(word):
 	def english(self):
 		return text.capitalize()
 	
-#class compoundword(word):
-
-
-
+class compoundword(word):
+	def __init__(self,roots):
+		self.roots = roots
+	
 
 #class sandwhich:
