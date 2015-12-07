@@ -5,50 +5,49 @@ from phrase import phrase
 word--word-+-word
            |
            +-word
-'''
+	'''
 
 #Connections
-HOR = '-'
-HOR_DOWN = '+'
-DOWN_RIGHT = '`'
-VERT_RIGHT = '+'
-VERT = '|'
+	HOR = '-'
+	HOR_DOWN = '+'
+	DOWN_RIGHT = '`'
+	VERT_RIGHT = '+'
+	VERT = '|'
 #Boudaries
-TOP =          '-'
-SIDE =         '|'
-TOP_RIGHT =    '.'
-TOP_LEFT =     ','
-BOTTOM_RIGHT = "'"
-BOTTOM_LEFT =  '`'
+	TOP =          '-'
+	SIDE =         '|'
+	TOP_RIGHT =    '.'
+	TOP_LEFT =     ','
+	BOTTOM_RIGHT = "'"
+	BOTTOM_LEFT =  '`'
 
 #Connections
-HOR = '─'
-HOR_DOWN = '┬'
-DOWN_RIGHT = '└'
-VERT_RIGHT = '├'
-VERT = '│'
+	HOR = '─'
+	HOR_DOWN = '┬'
+	DOWN_RIGHT = '└'
+	VERT_RIGHT = '├'
+	VERT = '│'
 #Boudaries
-TOP =          '─'
-SIDE =         '│'
-TOP_RIGHT =    '┐'
-TOP_LEFT =     "┌"
-BOTTOM_RIGHT = '┘'
-BOTTOM_LEFT =  '└'
+	TOP =          '─'
+	SIDE =         '│'
+	TOP_RIGHT =    '┐'
+	TOP_LEFT =     "┌"
+	BOTTOM_RIGHT = '┘'
+	BOTTOM_LEFT =  '└'
 
-'''
-HOR       =image(HOR)
-HOR_DOWN  =image(HOR_DOWN)
-DOWN_RIGHT=image(DOWN_RIGHT)
-VERT_RIGHT=image(VERT_RIGHT)
-VERT      =image(VERT)
-TOP       =image(TOP)
-SIDE      =image(SIDE)
-TOP_RIGHT =image(TOP_RIGHT)
-TOP_LEFT  =image(TOP_LEFT)
-BOTTOM_RIGHT=image(BOTTOM_RIGHT)
-BOTTOM_LEFT=image(BOTTOM_LEFT)
-'''
-
+	'''
+	HOR       =image(HOR)
+	HOR_DOWN  =image(HOR_DOWN)
+	DOWN_RIGHT=image(DOWN_RIGHT)
+	VERT_RIGHT=image(VERT_RIGHT)
+	VERT      =image(VERT)
+	TOP       =image(TOP)
+	SIDE      =image(SIDE)
+	TOP_RIGHT =image(TOP_RIGHT)
+	TOP_LEFT  =image(TOP_LEFT)
+	BOTTOM_RIGHT=image(BOTTOM_RIGHT)
+	BOTTOM_LEFT=image(BOTTOM_LEFT)
+	'''
 
 tree = {'describers': [{'describers': [{'describers': [], 'head': 'un', 'part': 'adv'}, {'describers': [{'describers': [{'describers': [{'describers': [], 'head': 'joj', 'part': 'noun'}], 'head': 'fi7', 'part': 'prep'}], 'head': 'joj', 'part': 'noun'}], 'head': 'ot', 'part': 'prep'}], 'head': 'ric', 'part': 'adj'}], 'head': 'xox', 'part': 'noun'}
 tree = {'part': 'noun', 'describers': [{'part': 'adj', 'describers': [{'part': 'adverboid', 'describers': [], 'head': 'xo'}, {'part': 'prep', 'describers': [{'part': 'noun', 'describers': [{'part': 'adj', 'describers': [], 'head': 'co'}], 'head': '0a0'}], 'head': 'u0'}, {'part': 'prep', 'describers': [{'part': 'noun', 'describers': [{'part': 'adj', 'describers': [], 'head': 'co'}], 'head': 'joj'}], 'head': 'ot'}], 'head': '8ec'}], 'head': 'xox'}
