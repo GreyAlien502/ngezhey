@@ -6,48 +6,36 @@ word--word-+-word
            |
            +-word
 	'''
+mode = 8
 
+if mode == 7:
 #Connections
-	HOR = '-'
-	HOR_DOWN = '+'
-	DOWN_RIGHT = '`'
-	VERT_RIGHT = '+'
-	VERT = '|'
+	HOR = image('-')
+	HOR_DOWN = image('+')
+	DOWN_RIGHT = image('`')
+	VERT_RIGHT = image('+')
+	VERT = image('|')
 #Boudaries
-	TOP =          '-'
-	SIDE =         '|'
-	TOP_RIGHT =    '.'
-	TOP_LEFT =     ','
+	TOP =          image('-')
+	SIDE =         image('|')
+	TOP_RIGHT =    image('.')
+	TOP_LEFT =     image(',')
 	BOTTOM_RIGHT = "'"
-	BOTTOM_LEFT =  '`'
-
+	BOTTOM_LEFT =  image('`')
+else:
 #Connections
-	HOR = '─'
-	HOR_DOWN = '┬'
-	DOWN_RIGHT = '└'
-	VERT_RIGHT = '├'
-	VERT = '│'
+	HOR = image('─')
+	HOR_DOWN = image('┬')
+	DOWN_RIGHT = image('└')
+	VERT_RIGHT = image('├')
+	VERT = image('│')
 #Boudaries
-	TOP =          '─'
-	SIDE =         '│'
-	TOP_RIGHT =    '┐'
-	TOP_LEFT =     "┌"
-	BOTTOM_RIGHT = '┘'
-	BOTTOM_LEFT =  '└'
-
-	'''
-	HOR       =image(HOR)
-	HOR_DOWN  =image(HOR_DOWN)
-	DOWN_RIGHT=image(DOWN_RIGHT)
-	VERT_RIGHT=image(VERT_RIGHT)
-	VERT      =image(VERT)
-	TOP       =image(TOP)
-	SIDE      =image(SIDE)
-	TOP_RIGHT =image(TOP_RIGHT)
-	TOP_LEFT  =image(TOP_LEFT)
-	BOTTOM_RIGHT=image(BOTTOM_RIGHT)
-	BOTTOM_LEFT=image(BOTTOM_LEFT)
-	'''
+	TOP =          image('─')
+	SIDE =         image('│')
+	TOP_RIGHT =    image('┐')
+	TOP_LEFT =     image('┌')
+	BOTTOM_RIGHT = image('┘')
+	BOTTOM_LEFT =  image('└')
 
 tree = {'describers': [{'describers': [{'describers': [], 'head': 'un', 'part': 'adv'}, {'describers': [{'describers': [{'describers': [{'describers': [], 'head': 'joj', 'part': 'noun'}], 'head': 'fi7', 'part': 'prep'}], 'head': 'joj', 'part': 'noun'}], 'head': 'ot', 'part': 'prep'}], 'head': 'ric', 'part': 'adj'}], 'head': 'xox', 'part': 'noun'}
 tree = {'part': 'noun', 'describers': [{'part': 'adj', 'describers': [{'part': 'adverboid', 'describers': [], 'head': 'xo'}, {'part': 'prep', 'describers': [{'part': 'noun', 'describers': [{'part': 'adj', 'describers': [], 'head': 'co'}], 'head': '0a0'}], 'head': 'u0'}, {'part': 'prep', 'describers': [{'part': 'noun', 'describers': [{'part': 'adj', 'describers': [], 'head': 'co'}], 'head': 'joj'}], 'head': 'ot'}], 'head': '8ec'}], 'head': 'xox'}
@@ -58,15 +46,16 @@ def border(text):
 	maxx = minx+text.getWidth()+1
 	maxy = miny+text.getLength()+1
 
-	text = text.overlay(image(TOP_LEFT),minx,miny)
-	text = text.overlay(image(TOP_RIGHT),maxx,miny)
-	text = text.overlay(image(BOTTOM_LEFT),minx,maxy)
-	text = text.overlay(image(BOTTOM_RIGHT),maxx,maxy)
+	text = text.overlay(TOP_LEFT,minx,miny)
+	text = text.overlay(TOP_RIGHT,maxx,miny)
+	text = text.overlay(BOTTOM_LEFT,minx,maxy)
+	text = text.overlay(BOTTOM_RIGHT,maxx,maxy)
 
 	text = text.fill(minx+1,miny,maxx,miny+1,TOP)
 	text = text.fill(minx+1,maxy,maxx,maxy+1,TOP)
 	text = text.fill(minx,miny+1,minx+1,maxy,SIDE)
 	text = text.fill(maxx,miny+1,maxx+1,maxy,SIDE)
+	text.origin[0]=text.origin[0]-1
 	return text
 
 def draw(head,tails):
@@ -76,28 +65,28 @@ def draw(head,tails):
 	x = drawing.getWidth()
 	for i in range(0,len(tails)):
 		desc = drawPhrase(tails[i])
-		if i == len(tails)-1:
-			if i == 0:
-				connection = HOR
-			else:
-				connection = DOWN_RIGHT
+		print(i)
+		print(desc)
+		if i == 0:
+			drawing = drawing.overlay(HOR,x,y)
+			drawing = drawing.overlay(desc,x+1,y)
+		elif i == 1:
+			drawing = drawing.overlay(HOR_DOWN,x,oldy)
+			drawing = drawing.fill(x,oldy+1,x+1,y+desc.origin[1],VERT)
+			drawing = drawing.overlay(DOWN_RIGHT,x,y+desc.origin[1])
+			drawing = drawing.overlay(desc,x+1,y+desc.origin[1])
 		else:
-			if i == 0:
-				connection = HOR_DOWN
-			else:
-				connection = VERT_RIGHT
-		connection = image(connection)
-		y = y + desc.getLength()
-		start = oldy#+desc.origin[1]
+			drawing = drawing.overlay(VERT_RIGHT,x,oldy)
+			drawing = drawing.fill(x,oldy+1,x+1,y+desc.origin[1],VERT)
+			drawing = drawing.overlay(DOWN_RIGHT,x,y+desc.origin[1])
+			drawing = drawing.overlay(desc,x+1,y+desc.origin[1])
 		oldy = y
+		y = y + desc.maxy()
 		if (tails[i].zhozh == True) and (tails[i].part == 'n'):
 			desc = border(desc)
-			
-
-		drawing = drawing.overlay(connection,x,start)
-		drawing = drawing.overlay(desc,x+desc.origin[0]+1,start)
 		if (tails[i].zhozh == True) and (tails[i].part != 'n'):
 			return draw(border(drawing),tails[i+1:])
+
 	return drawing
 
 def drawPhrase(tree):
