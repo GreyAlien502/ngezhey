@@ -20,7 +20,7 @@ if mode == 7:
 	SIDE =         image('|')
 	TOP_RIGHT =    image('.')
 	TOP_LEFT =     image(',')
-	BOTTOM_RIGHT = "'"
+	BOTTOM_RIGHT = image("'")
 	BOTTOM_LEFT =  image('`')
 else:
 #Connections
