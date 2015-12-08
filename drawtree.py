@@ -65,8 +65,6 @@ def draw(head,tails):
 	x = drawing.getWidth()
 	for i in range(0,len(tails)):
 		desc = drawPhrase(tails[i])
-		print(i)
-		print(desc)
 		if i == 0:
 			drawing = drawing.overlay(HOR,x,y)
 			drawing = drawing.overlay(desc,x+1,y)
