@@ -1,7 +1,9 @@
 import json
+import os
 
 def translate(word):
-	dictfile = open('ngenglecian','r')
+	__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+	dictfile = open(os.path.join(__location__, 'ngenglecian'),'r');
 	dictionary = json.load(dictfile)
 	dictfile.close()
 	
