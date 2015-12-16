@@ -65,6 +65,8 @@ def draw(head,tails):
 	x = drawing.getWidth()
 	for i in range(0,len(tails)):
 		desc = drawPhrase(tails[i])
+		if (tails[i].zhozh == True) and (tails[i].part == 'n'):
+			desc = border(desc)
 		if i == 0:
 			drawing = drawing.overlay(HOR,x,y)
 			drawing = drawing.overlay(desc,x+1,y)
@@ -80,14 +82,14 @@ def draw(head,tails):
 			drawing = drawing.overlay(desc,x+1,y+desc.origin[1])
 		oldy = y
 		y = y + desc.maxy()
-		if (tails[i].zhozh == True) and (tails[i].part == 'n'):
-			desc = border(desc)
 		if (tails[i].zhozh == True) and (tails[i].part != 'n'):
 			return draw(border(drawing),tails[i+1:])
 
 	return drawing
 
 def drawPhrase(tree):
+	if tree.zhozh:
+		return draw(border(image(str(tree.head))),tree.desc)
 	return draw(image(str(tree.head)),tree.desc)
 
 def asciiimage(x):
