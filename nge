@@ -29,4 +29,4 @@ for match in matches:
 		translationString += '\n\t' + translation['english']
 		if translation['notes']!=[]:
 			translationString += ' ('+'; '.join(translation['notes'])+')'
-	print(match['original']+":"+ translationString)
+	print(match['original']+' ['+match['partOfSpeech']+"]:"+ translationString)
