@@ -1,0 +1,32 @@
+#!/usr/bin/env python 
+import argparse
+
+import dictionary
+
+parser = argparse.ArgumentParser()
+parser.add_argument("string",
+	help="the English word being searched for")
+parser.add_argument('-e',"--exact",action="store_true",
+	help="match any translation contaning search string")
+parser.add_argument('-s',"--start",action="store_true",
+	help="match any translation starting with search string (default)")
+parser.add_argument('-c',"--contains",action="store_true",
+	help="match any translation contaning search string")
+args = parser.parse_args()
+
+mode = 'start'
+if args.exact:
+	mode='exact'
+elif args.contains:
+	mode='contains'
+elif args.start:
+	mode='start'
+
+matches = dictionary.search(args.string,mode)
+for match in matches:
+	translationString = ''
+	for translation in match['translations']:
+		translationString += '\n\t' + translation['english']
+		if translation['notes']!=[]:
+			translationString += ' ('+'; '.join(translation['notes'])+')'
+	print(match['original']+":"+ translationString)
