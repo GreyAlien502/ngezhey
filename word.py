@@ -26,6 +26,8 @@ class loanword(word):
 class compoundword(word):
 	def __init__(self,roots):
 		self.roots = roots
+	def __str__(self):
+		return '-'.join([str(root) for root in self.roots])
 	
 
 #class sandwhich:
