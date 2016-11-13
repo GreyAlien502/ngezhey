@@ -12,7 +12,10 @@ parser.add_argument('-s',"--start",action="store_true",
 	help="match any translation starting with search string (default)")
 parser.add_argument('-c',"--contains",action="store_true",
 	help="match any translation contaning search string")
+parser.add_argument('-r',"--reverse",action="store_true",
+	help="search for entries matching Ngezhey")
 args = parser.parse_args()
+
 
 mode = 'start'
 if args.exact:
@@ -22,7 +25,12 @@ elif args.contains:
 elif args.start:
 	mode='start'
 
-matches = dictionary.search(args.string,mode)
+if args.reverse:
+	to='eng'
+else:
+	to='nge'
+
+matches = dictionary.search(args.string,mode,to)
 for match in matches:
 	translationString = ''
 	for translation in match['translations']:
