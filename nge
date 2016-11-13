@@ -6,6 +6,8 @@ import dictionary
 parser = argparse.ArgumentParser()
 parser.add_argument("string",
 	help="the English word being searched for")
+parser.add_argument('-p',"--part-of-speech",
+	help="only match words with this part of speech")
 parser.add_argument('-e',"--exact",action="store_true",
 	help="match any translation contaning search string")
 parser.add_argument('-s',"--start",action="store_true",
@@ -37,4 +39,5 @@ for match in matches:
 		translationString += '\n\t' + translation['english']
 		if translation['notes']!=[]:
 			translationString += ' ('+'; '.join(translation['notes'])+')'
-	print(match['original']+' ['+match['partOfSpeech']+"]:"+ translationString)
+	if args.part_of_speech == None or match['partOfSpeech'] == args.part_of_speech:
+		print(match['original']+' ['+match['partOfSpeech']+"]:"+ translationString)
