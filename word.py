@@ -21,7 +21,7 @@ class loanword(word):
 		self.part = 'n'
 
 	def english(self):
-		return text.capitalize()
+		return self.text.capitalize()
 	
 class compoundword(word):
 	def __init__(self,roots):

@@ -13,36 +13,38 @@ class phrase:
 			head = ''
 			tail = []
 			if self.desc != []:
-				for describer in desc:
-					if describer.text == 'xo':
+				for describer in self.desc:
+					if describer.head.text == 'xo':
 						head = 'no '
-					elif describer.part == 'av':
+					elif describer.head.part == 'av':
 						tail.append('existing'+describer.english())
-					elif desc.part in ['aj','av']:
+					elif describer.head.part in ['aj','pr']:
 						tail.append(describer.english())
-				return head + self.english()+' that is '+" and ".join(tail)
+				return head + self.head.english()+' that is '+" and ".join(tail)
 			else:
-				return head
+				return head + self.head.english()
 		if self.part == 'aj':
 			head = ''
 			tail = ''
 			for describer in self.desc:
-				if describer.part == 'pr':
-					tail = tail + desc.english()
+				if describer.head.part == 'pr':
+					tail = tail + ' ' + describer.english()
 				else:
-					head = head + desc.english()
-			return head +' '+ desc.head.english()+tail
-		if self.part == 'av':
-			return english()
-		if self.part == 'pr':
+					head = head + describer.english() + ' '
+			return head + self.head.english() + tail
+		if self.head.part == 'av':
+			return \
+				self.head.english() +' '+ \
+				+ ' '.join([describer.english() for describer in self.desc])
+		if self.head.part == 'pr':
 			head = ''
 			tail = 'something'
 			for describer in self.desc:
-				if describer.part == 'noun':
-					tail = translate(describer)
-				elif describer['part'] == 'adv':
+				if describer.part == 'n':
+					tail = describer.english()
+				elif describer.part == 'av':
 					head.append(translate(describer))
-			return ", and ".join(head)+' '+english(phrase['head'])+' '+tail
-		if phrase['part'] == 'adverboid':
-			return english(phrase['head'])
+			return ", and ".join(head)+' '+self.head.english()+' '+tail
+		if self.part == 'ab':
+			return self.head.english()
 
