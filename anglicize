@@ -1,0 +1,10 @@
+#!/usr/bin/env python 
+import json
+import sys
+
+import parse
+from dictionary import translate as english
+
+sentence = parse.unparsed(sys.argv[1:] + ['ol'])
+parse.parse(sentence)
+print('There is '+sentence[0].english()+". ")
